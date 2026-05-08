@@ -17,25 +17,39 @@ static Stack<Integer> B = new Stack<>();
 static Stack<Integer> C = new Stack<>();
 static int itemAtTop = 0;
 static int MoveCounter = 0;
+static Scanner choose = new Scanner(System.in);
+static boolean picked = false;
+static String input = "";
+static int level = 0;
 
-public static void main (String[] args){
-A.push(4);
-A.push(3);
-A.push(2);
-A.push(1);
-
-    while(!(C.size() == 4 || B.size() == 4)){
-
+static void initiation() {
+    boolean ready = false;
+    while (!ready) {
+        System.out.println("Welcome to Tower of Hanoi. What level would you like to play?");
+        level = choose.nextInt();
+        choose.nextLine();
+        int perfectScore = (int) Math.pow(2, level) - 1;
+        System.out.println("Perfect score is " + perfectScore + " moves. Proceed? (yes/no)");
+        String answer = choose.nextLine();
+        if (answer.equals("yes")) {
+            ready = true;
+        }
+    }
+    for (int i = level; i > 0; i--) {
+        A.push(i);
+    }
+}
+//Display the stacks and move counter
+static void display() {
 System.out.println("A: " + (A.isEmpty() ? "empty" : A));
 System.out.println("B: " + (B.isEmpty() ? "empty" : B));
 System.out.println("C: " + (C.isEmpty() ? "empty" : C));
 System.out.println("Moves: " + MoveCounter);
-
-    Scanner choose = new Scanner(System.in);
+}
+//pick an item
+static void pick() {
 System.out.println("Choose something to move");
-String input = choose.nextLine();
-
-boolean picked = false;
+input = choose.nextLine();
 
 switch(input) {
     case "A":
@@ -68,8 +82,10 @@ switch(input) {
     default:
         System.out.println("Capitalise A B OR C");
 }
-
-if (picked) {
+}
+//place the item
+static void place() {
+    if (picked) {
     System.out.println("Choose a column to drop it");
     String drop = choose.nextLine();
     while(drop.equals(input)) {
@@ -82,16 +98,22 @@ if (picked) {
                 A.push(itemAtTop);
                 MoveCounter++;
             } else {
-                System.out.println("Can't be dropped here");
-            }
+    System.out.println("Can't be dropped here");
+    if (input.equals("A")) A.push(itemAtTop);
+    else if (input.equals("B")) B.push(itemAtTop);
+    else if (input.equals("C")) C.push(itemAtTop);
+}
             break;
         case "B":
             if (B.isEmpty() || B.peek() > itemAtTop) {
                 B.push(itemAtTop);
                 MoveCounter++;
             } else {
-                System.out.println("Can't be dropped here");
-            }
+    System.out.println("Can't be dropped here");
+    if (input.equals("A")) A.push(itemAtTop);
+    else if (input.equals("B")) B.push(itemAtTop);
+    else if (input.equals("C")) C.push(itemAtTop);
+}
             break;
         case "C":
             if (C.isEmpty() || C.peek() > itemAtTop) {
@@ -99,12 +121,32 @@ if (picked) {
                 MoveCounter++;
             } else {
                 System.out.println("Can't be dropped here");
+                if (input.equals("A")) A.push(itemAtTop);
+                else if (input.equals("B")) B.push(itemAtTop);
+                else if (input.equals("C")) C.push(itemAtTop);
             }
             break;
         default:
             System.out.println("Capitalise A B OR C");
+            if (input.equals("A")) A.push(itemAtTop);
+            else if (input.equals("B")) B.push(itemAtTop);
+            else if (input.equals("C")) C.push(itemAtTop);
     }
 }
-    }
+picked = false;
+}
+
+
+
+public static void main (String[] args){
+
+initiation();
+
+    while(!(C.size() == level || B.size() == level)){
+display();
+pick();
+place();
+}
+    System.out.println("You win! It took you " + MoveCounter + " moves!");
 }
 }
